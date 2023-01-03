@@ -1,0 +1,18 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-configuration
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"ingress-nginx","app.kubernetes.io/part-of":"ingress-nginx"},"name":"nginx-configuration","namespace":"ingress-nginx"}}
+data:
+  use-forwarded-headers: "true"
+  compute-full-forwarded-for: "true"
+  use-proxy-protocol: 'True'
+  real-ip-header: proxy_protocol
+  set-real-ip-from: 172.26.0.0/16  #修改为当前kubernetes环境的当前使用的VPC的CIDR格式的网络信息
+  log-format-upstream: '{"nginx_timestamp":"$time_iso8601","tcp_xff":"$proxy_protocol_addr","clientip":"$remote_addr","nginx_host":"$server_addr","host":"$http_host","request":"$request","url":"$request_uri","upstreamhost":"$upstream_addr","status":"$status","body_bytes_sent":"$body_bytes_sent","request_time":"$request_time","upstream_response_time":"$upstream_response_time","xff":"$http_x_forwarded_for","referer":"$http_referer","http_user_agent":"$http_user_agent","request_length":"$request_length","request_method":"$request_method"}'

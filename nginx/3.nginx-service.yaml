@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: myserver-nginx-service-label
+  name: myserver-nginx-service
+  namespace: myserver
+spec:
+  type: LoadBalancer
+  #type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30004
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+    nodePort: 30443
+  selector:
+    app: myserver-nginx-selector

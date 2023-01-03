@@ -1,0 +1,29 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: myserver-nginx-deployment-label
+  name: myserver-nginx-deployment
+  namespace: myserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myserver-nginx-selector
+  template:
+    metadata:
+      labels:
+        app: myserver-nginx-selector
+    spec:
+      containers:
+      - name: myserver-nginx-container
+        image: nginx:1.22.1-alpine
+        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        - containerPort: 443
+          protocol: TCP
+          name: https
