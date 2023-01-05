@@ -1,0 +1,30 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: myserver-nginx-service-label
+  name: myserver-nginx-service
+  namespace: myserver
+  annotations:
+    service.beta.kubernetes.io/jdcloud-load-balancer-spec: |
+      version: "v1"
+      loadBalancerType: nlb
+      internal: false
+
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  #type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    #nodePort: 33080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+   # nodePort: 33443
+  selector:
+    app: myserver-nginx-selector

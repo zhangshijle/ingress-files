@@ -1,0 +1,58 @@
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: myserver-tomcat-app2-deployment-label
+  name: myserver-tomcat-app2-deployment
+  namespace: myserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myserver-tomcat-app2-selector
+  template:
+    metadata:
+      labels:
+        app: myserver-tomcat-app2-selector
+    spec:
+      containers:
+      - name: myserver-tomcat-app2-container
+        image: tomcat:7.0.94-alpine 
+        #command: ["/apps/tomcat/bin/run_tomcat.sh"]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        - name: "password"
+          value: "123456"
+        - name: "age"
+          value: "18"
+        #resources:
+        #  limits:
+        #    cpu: 1
+        #    memory: "512Mi"
+        #  requests:
+        #    cpu: 500m
+        #    memory: "512Mi"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: myserver-tomcat-app2-service-label
+  name: myserver-tomcat-app2-service
+  namespace: myserver
+spec:
+  #type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    #nodePort: 40004
+  selector:
+    app: myserver-tomcat-app2-selector

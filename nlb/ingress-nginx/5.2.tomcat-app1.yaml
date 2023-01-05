@@ -1,0 +1,44 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: myserver-tomcat-app1-deployment-label
+  name: myserver-tomcat-app1-deployment
+  namespace: myserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myserver-tomcat-app1-selector
+  template:
+    metadata:
+      labels:
+        app: myserver-tomcat-app1-selector
+    spec:
+      containers:
+      - name: myserver-tomcat-app1-container
+        image: tomcat:7.0.94-alpine 
+        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: myserver-tomcat-app1-service-label
+  name: myserver-tomcat-app1-service
+  namespace: myserver
+spec:
+  #type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    #nodePort: 40003
+  selector:
+    app: myserver-tomcat-app1-selector
